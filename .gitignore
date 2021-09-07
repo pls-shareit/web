@@ -1,0 +1,8 @@
+/node_modules
+/frontend
+
+.env.local
+.env.*.local
+
+.idea
+.vscode
