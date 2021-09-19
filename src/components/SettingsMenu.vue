@@ -1,47 +1,44 @@
 <template lang="pug">
-.component-root
+.component_root
   .settings(
     :class='{ "settings--open": openFromClick || openFromHover }'
     @mouseover='openFromHover = true'
     @mouseleave='openFromHover = false'
   )
     .settings__list
-      .settings__setting(@click='passwordPickerOpen = true')
+      .settings__setting(@click='store.commit(OPEN_PASSWORD_PICKER)' v-if='store.state.actions.login')
         img(src='../assets/icons/key.svg').settings__setting__icon.icon
         span.settings__setting__name Set Password
-      ThemePicker.settings__setting
+      ThemeInput.settings__setting
       a(href='https://arty.li' target='_blank').settings__setting
         .settings__setting__icon &copy;
         .settings__setting__name Artemis 2021
     img(src='../assets/icons/gear.svg' @click='onClick').settings__icon.icon
-  PasswordPicker(:open='passwordPickerOpen' @close='passwordPickerOpen = false')
+  PasswordInput
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script lang="ts" setup>
+import { ref } from "vue";
+import { useStore } from "vuex";
 
-import ThemePicker from "./ThemePicker.vue";
-import PasswordPicker from "./PasswordPicker.vue";
+import { OPEN_PASSWORD_PICKER } from "@/utils/mutations";
+import ThemeInput from "@/components/inputs/Theme.vue";
+import PasswordInput from "@/components/inputs/Password.vue";
 
-@Options({
-  name: "SettingsMenu",
-  components: { ThemePicker, PasswordPicker },
-})
-export default class SettingsMenu extends Vue {
-  openFromClick = false;
-  openFromHover = false;
-  passwordPickerOpen = false;
+const store = useStore();
 
-  /** Handle an click (or tap) on the icon.
-   *
-   * This should keep the settings open until it's clicked again. */
-  onClick(): void {
-    this.openFromClick = !this.openFromClick;
-    // Mobile user agents will simulate hover events when the user taps, so
-    // it will look like they're hovering on the element until they tap
-    // somewhere else on the screen.
-    if (!this.openFromClick) this.openFromHover = false;
-  }
+const openFromClick = ref(false);
+const openFromHover = ref(false);
+
+/** Handle an click (or tap) on the icon.
+ *
+ * This should keep the settings open until it's clicked again. */
+function onClick(): void {
+  openFromClick.value = !openFromClick.value;
+  // Mobile user agents will simulate hover events when the user taps, so
+  // it will look like they're hovering on the element until they tap
+  // somewhere else on the screen.
+  if (!openFromClick.value) openFromHover.value = false;
 }
 </script>
 

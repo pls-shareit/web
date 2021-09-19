@@ -4,30 +4,41 @@
     img.header__logo(src='./assets/logo.png')
     h1.header__title ShareIt
     p.header__description ShareIt is a pastebin, link shortener and file uploader.
-  hr.page_break
+  hr.page_break(v-if='actions.createPaste || actions.createLink || actions.createFile || actions.login')
   .actions
-    .action
+    .action(v-if='actions.createPaste')
       img(src='./assets/icons/clipboard.svg').action__icon.icon
       h2.action__title Paste
-    .action
+    .action(v-if='actions.createLink')
       img(src='./assets/icons/link.svg').action__icon.icon
       h2.action__title Link
-    .action
+    .action(v-if='actions.createFile')
       img(src='./assets/icons/upload.svg').action__icon.icon
       h2.action__title File
+    .action(
+        v-if='actions.login && !(actions.createPaste || actions.createLink || actions.createFile)'
+        @click='store.commit(OPEN_PASSWORD_PICKER)')
+      img(src='./assets/icons/key.svg').action__icon.icon
+      h2.action__title Login
+  Errors
   SettingsMenu
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script lang="ts" setup>
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
 
-import SettingsMenu from "./components/SettingsMenu.vue";
+import { OPEN_PASSWORD_PICKER, UPDATE_ABILITIES } from "@/utils/mutations";
+import { Actions } from "@/utils/data";
+import { NoExpiry } from "@/utils/expiry";
+import type { Expiry } from "@/utils/expiry";
+import SettingsMenu from "@/components/SettingsMenu.vue";
+import Errors from "@/components/Errors.vue";
 
-@Options({
-  name: "Index",
-  components: { SettingsMenu },
-})
-export default class Index extends Vue {}
+const store = useStore();
+store.dispatch(UPDATE_ABILITIES);
+
+const actions = computed(() => store.state.actions);
 </script>
 
 <style lang="sass">
@@ -47,7 +58,6 @@ body
 .index
   display: flex
   flex-direction: column
-  align-items: stretch
   justify-content: center
   min-height: 100vh
 
@@ -61,6 +71,7 @@ body
 .header__title
   font-size: 3rem
   margin: 1rem 0 1rem 0
+  font-weight: normal
 
 .header__description
   margin: 0
@@ -103,4 +114,5 @@ body
 .action__title
   font-size: 1.2rem
   margin: 0.5rem 0 0 0
+  font-weight: normal
 </style>

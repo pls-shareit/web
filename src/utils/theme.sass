@@ -1,9 +1,11 @@
 $background: var(--background)
 $item-background: var(--item-background)
 $item-border: var(--item-border)
+$disabled-item-border: var(--disabled-item-border)
 $item-border-width: var(--item-border-width)
 $item-hover-background: var(--item-hover-background)
 $text-colour: var(--text-colour)
+$disabled-colour: var(--disabled-colour)
 $secondary-colour: var(--secondary-colour)
 $icon-filter: var(--icon-filter)
 $list-border-width: var(--list-border-width)
@@ -14,5 +16,24 @@ $popup-hover-background: var(--popup-hover-background)
 
 =item-style
   background: $item-background
-  outline: $item-border
+  border: $item-border
   box-sizing: border-box
+
+=input-style
+  +item-style
+  outline: 0
+  color: inherit
+  font-family: inherit
+  font-size: inherit
+  padding: 0.5rem
+  transition: all 200ms linear
+  &::-webkit-input-placeholder
+    color: inherit
+  &:focus, &:hover:not(:disabled)
+    outline: 0
+    background: $item-hover-background
+  &:disabled
+    color: $disabled-colour
+    border: $disabled-item-border
+  &:not(:last-of-type)
+    margin-right: calc(-1 * #{$item-border-width})

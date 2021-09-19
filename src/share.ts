@@ -1,4 +1,5 @@
 import { createApp } from "vue";
-import Share from "./Share.vue";
+import Share from "@/Share.vue";
+import { store } from "@/utils/data";
 
-createApp(Share).mount("#app");
+createApp(Share).use(store).mount("#app");

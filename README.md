@@ -6,10 +6,9 @@ A modern-looking web frontend for [ShareIt](https://github.com/pls-shareit/api).
 
 ## Setup
 
-The files that make up the frontend are built using
-[Webpack](https://webpack.js.org) and [Vue](https://vuejs.org). You can either
-install the relevant tools to build the frontend yourself, or grab a pre-built
-ZIP file.
+The files that make up the frontend are built using [Vue](https://vuejs.org).
+You can either install the relevant tools to build the frontend yourself, or
+grab a pre-built ZIP file.
 
 You should set up the API server before setting up the frontend, if you haven't
 already done so.
@@ -30,7 +29,7 @@ unzip frontend
 
  1. Install [Node.js](https://nodejs.org).
 
-    This is the language that Webpack and Vue tooling is written in.
+    This is the language that tooling for Vue is written in.
 
  2. Install [Yarn](https://yarnpkg.com).
 
@@ -66,7 +65,7 @@ Finally, restart the API server, and you should be good to go!
 ## Development
 
 Run `yarn serve` to start a hot-reloading development server. You should be
-able to access this server at `http://localhost:8080` or similar - the address
+able to access this server at `http://localhost:3000` or similar - the address
 will be printed to the console when the server starts.
 
 You can access the share page by adding `/share` to the end of the URL.

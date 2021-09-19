@@ -7,19 +7,14 @@
   )
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script lang="ts" setup>
+import { ThemeManager } from "@/utils/themes";
 
-import { ThemeManager } from "../utils/themes";
-
-@Options({ name: "ThemePicker" })
-export default class ThemePicker extends Vue {
-  themes = new ThemeManager();
-}
+const themes = new ThemeManager();
 </script>
 
 <style lang="sass" scoped>
-@import "../utils/theme.sass"
+@import "../../utils/theme.sass"
 
 .colour_picker__colour
   width: 1.5rem

@@ -12,6 +12,9 @@ const THEME_VARIABLES = {
   // A border for item elements.
   item_border: "--item-border",
 
+  // A border for disabled item elements.
+  disabled_item_border: "--disabled-item-border",
+
   // The width of the above border. Should always be set if the border is.
   item_border_width: "--item-border-width",
 
@@ -23,6 +26,9 @@ const THEME_VARIABLES = {
 
   // A colour for all text on the page.
   text_colour: "--text-colour",
+
+  // A colour for text labelling disabled elements.
+  disabled_colour: "--disabled-colour",
 
   // A CSS filter to apply to icons, which may be used to change their
   // colour.
@@ -56,6 +62,8 @@ class Theme {
     for (const variable of Object.values(THEME_VARIABLES)) {
       this.set(variable, "initial");
     }
+    // This has to be a length.
+    this.set(THEME_VARIABLES.item_border_width, "0px");
   }
 
   /** Set a variable by name.
@@ -89,10 +97,9 @@ class BaseGlassTheme extends Theme {
   constructor() {
     super();
     const V = THEME_VARIABLES;
-    this.set(V.item_background, "#fff2");
-    this.set(V.item_hover_background, "#fff4");
     this.set(V.secondary_colour, "#fff4");
     this.set(V.text_colour, "#fffc");
+    this.set(V.disabled_colour, "#fff4");
     this.set(V.icon_filter, "invert(100%) opacity(80%)");
     this.set(V.list_border_width, "1px");
     this.set(V.popup_overlay, "#0008");
@@ -107,6 +114,8 @@ class RedGlassTheme extends BaseGlassTheme {
     super();
     this.set(THEME_VARIABLES.background, "#b83450");
     this.set(THEME_VARIABLES.popup_background, "#b83450");
+    this.set(THEME_VARIABLES.item_background, "#c14f67");
+    this.set(THEME_VARIABLES.item_hover_background, "#c9667b");
   }
 }
 
@@ -117,6 +126,8 @@ class DarkGlassTheme extends BaseGlassTheme {
     super();
     this.set(THEME_VARIABLES.background, "#222");
     this.set(THEME_VARIABLES.popup_background, "#222");
+    this.set(THEME_VARIABLES.item_background, "#3f3f3f");
+    this.set(THEME_VARIABLES.item_hover_background, "#595959");
   }
 }
 
@@ -129,13 +140,16 @@ class PlainTheme extends Theme {
     this.set(V.background, "#fff");
     this.set(V.item_background, "#fff");
     this.set(V.item_border, "2px solid #000");
+    this.set(V.disabled_item_border, "2px solid #888");
     this.set(V.item_border_width, "2px");
     this.set(V.item_hover_background, "#fff");
     this.set(V.secondary_colour, "#000");
     this.set(V.text_colour, "#000");
+    this.set(V.disabled_colour, "#888");
     this.set(V.list_border_width, "2px");
     this.set(V.popup_background, "#fff");
     this.set(V.popup_border, "2px solid #000");
+    this.set(V.popup_overlay, "#0002");
   }
 }
 
