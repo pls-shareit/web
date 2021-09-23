@@ -128,7 +128,10 @@ export type ErrorMessage = {
   timestamp: Date;
 };
 
+type ScreenName = "title" | "link" | "paste" | "file";
+
 export type State = {
+  screen: ScreenName;
   passwordPickerOpen: boolean;
   password: string | null;
   actions: Actions;
@@ -139,6 +142,7 @@ export type State = {
 export const store = createStore({
   state(): State {
     return {
+      screen: "title",
       passwordPickerOpen: false,
       password: localStorage.getItem("shareit-password") || null,
       actions: new Actions(EMPTY_ABILITIES),
@@ -147,6 +151,9 @@ export const store = createStore({
     };
   },
   mutations: {
+    [names.SWITCH_SCREEN](state: State, screen: ScreenName) {
+      state.screen = screen;
+    },
     [names.OPEN_PASSWORD_PICKER](state: State) {
       state.passwordPickerOpen = true;
     },

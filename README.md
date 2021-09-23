@@ -2,7 +2,7 @@
 
 A modern-looking web frontend for [ShareIt](https://github.com/pls-shareit/api).
 
-**Warning:** This is a pre-release. The frtontend does not yet do anything useful.
+**Warning:** This is a pre-release. The frontend does not yet do anything useful.
 
 ## Setup
 

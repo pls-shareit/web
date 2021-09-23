@@ -1,77 +1,81 @@
 <template lang="pug">
 .expiry
-  RadioButton.expiry__mode(option='never' v-model='mode' v-if='expiryAllowed(null)')
-    span.expiry__mode__label Expire never
-  RadioButton.expiry__mode(option='relative' v-model='mode' v-if='relativeOptions.length > 1')
-    span.expiry__mode__label Expire after
-    select.select(:disabled='mode !== "relative"' v-model='relativeValue')
-      option(
-        v-for='[ seconds, label ] of relativeOptions'
-        :value='seconds') {{ label }}
-  RadioButton.expiry__mode(option='constRelative' v-model='mode' v-if='relativeOptions.length === 1')
-    span.expiry__mode__label Expire after {{ relativeOptions[0][1] }}
-  RadioButton.expiry__mode(option='absolute' v-model='mode')
-    span.expiry__mode__label Expire on
-    DatetimeInput(:disabled='mode !== "absolute"' v-model='absoluteValue')
+  span Expire ...
+  select.select(v-model='selectedExpiryLabel')
+    option(v-for='label of expiryOptions.keys()' :value='label') {{ label }}
+  DatetimeInput(v-model='absoluteValue' v-if='absoluteSelected' :disabled='false')
 </template>
 
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue";
+import type { Ref } from "vue";
 import { useStore } from "vuex";
 
 import { AbsoluteExpiry, RelativeExpiry, NoExpiry } from "@/utils/expiry";
 import type { Expiry } from "@/utils/expiry";
 import DatetimeInput from "@/components/inputs/Datetime.vue";
-import RadioButton from "@/components/inputs/RadioButton.vue";
 
 const store = useStore();
 
+const props = defineProps<{
+  modelValue: Expiry;
+}>();
 const emit = defineEmits<{
   (event: "update:modelValue", value: Expiry): void;
 }>();
 
-const ALL_RELATIVE_OPTIONS: [number, string][] = [
-  [60 * 5, "five minutes"],
-  [60 * 60, "an hour"],
-  [60 * 60 * 24, "a day"],
-  [60 * 60 * 24 * 10, "ten days"],
-  [60 * 60 * 24 * 60, "two months"],
-  [60 * 60 * 24 * 365, "a year"],
-];
+const absoluteValue = ref(new Date(new Date().getTime() + 3600000));
+const absoluteExpiry = computed(() => new AbsoluteExpiry(absoluteValue.value));
+const absoluteSelected = computed(
+  () => selectedExpiryLabel.value === "on this date:",
+);
+const selectedExpiryLabel = ref("never");
 
-function expiryAllowed(expiry: number | null): boolean {
-  const max = store.state.resitrictions.maxExpiryTime;
-  if (expiry === null) return max === null;
-  return max === null || expiry <= max;
-}
+const allExpiryOptions = new Map<string, Ref<Expiry>>([
+  ["never", ref(new NoExpiry())],
+  ["in five minutes", ref(new RelativeExpiry(60 * 5))],
+  ["in an hour", ref(new RelativeExpiry(60 * 60))],
+  ["in a day", ref(new RelativeExpiry(60 * 60 * 24))],
+  ["in ten days", ref(new RelativeExpiry(60 * 60 * 24 * 10))],
+  ["in two months", ref(new RelativeExpiry(60 * 60 * 24 * 60))],
+  ["in a year", ref(new RelativeExpiry(60 * 60 * 24 * 365))],
+  ["on this date:", absoluteExpiry],
+]);
 
-const relativeOptions = computed(() => {
-  return ALL_RELATIVE_OPTIONS.filter(([seconds, _label]) =>
-    expiryAllowed(seconds),
-  );
+const expiryOptions = computed(() => {
+  const max = store.state.restrictions.maxExpiryTime;
+  if (max === null) return allExpiryOptions;
+  const options = new Map();
+  for (const [label, { value }] of options) {
+    if (
+      value instanceof AbsoluteExpiry ||
+      (value instanceof RelativeExpiry && value.getSeconds() <= max)
+    ) {
+      options.set(label, value);
+    }
+  }
+  if (options.size < 2) {
+    options.set(`maximum (${max}s)`, ref(new RelativeExpiry(max)));
+  }
+  if (
+    !Array.from(options.values()).some(
+      ({ value }) => value === props.modelValue,
+    )
+  ) {
+    if (options.has("never")) {
+      emit("update:modelValue", options.get("never"));
+    } else {
+      emit("update:modelValue", options.get("on this date:"));
+    }
+  }
+  return options;
 });
 
-const mode = ref("never");
-const absoluteValue = ref(new Date(new Date().getTime() + 3600000));
-const relativeValue = ref(300); // Seconds.
-
-function getValue() {
-  switch (mode.value) {
-    case "never":
-      return new NoExpiry();
-    case "relative":
-      return new RelativeExpiry(relativeValue.value);
-    case "constRelative":
-      return new RelativeExpiry(relativeOptions.value[0][0]);
-    case "absolute":
-      return new AbsoluteExpiry(absoluteValue.value);
-  }
-  console.error(`Unexpected expiry picker mode ${mode.value}.`);
-  return new NoExpiry();
-}
-
-watch([mode, absoluteValue, relativeValue], () => {
-  emit("update:modelValue", getValue());
+watch([selectedExpiryLabel, absoluteValue], () => {
+  emit(
+    "update:modelValue",
+    expiryOptions.value.get(selectedExpiryLabel.value).value,
+  );
 });
 </script>
 
@@ -80,20 +84,10 @@ watch([mode, absoluteValue, relativeValue], () => {
 
 .expiry
   display: flex
-  flex-direction: column
-
-.expiry__mode
-  display: flex
-  align-items: center
   flex-wrap: wrap
-  row-gap: 0.5rem
-  margin: 0.5rem
-  min-height: 2rem
-  cursor: text
-
-.expiry__mode__label
-  padding-right: 1ch
+  align-items: center
 
 .select
+  margin: 0.5rem 1ch
   +input-style
 </style>

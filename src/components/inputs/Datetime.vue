@@ -2,7 +2,7 @@
 .datetime_picker
   .date
     select.select(v-model='day' :disabled='disabled')
-      option(v-for='day of daysInMonth' :value='day') {{ day }}
+      option(v-for='day of daysInMonth(year, month)' :value='day') {{ day }}
     select.select(v-model='month' :disabled='disabled')
       option(v-for='[ monthNum, monthName ] in MONTH_NAMES.entries()' :value='monthNum') {{ monthName }}
     select.select(v-model='year' :disabled='disabled')
@@ -44,7 +44,8 @@ const MIN_YEAR = new Date().getFullYear();
 const YEAR_RANGE = 20;
 
 function update(updater: (value: Date) => void) {
-  const value = props.modelValue;
+  // We need a new object or Vue will not recognise the change.
+  const value = new Date(props.modelValue);
   updater(value);
   emit("update:modelValue", value);
 }
@@ -62,8 +63,11 @@ const month = computed({
     return props.modelValue.getMonth();
   },
   set(month: number) {
-    update((d) => d.setMonth(month));
-    day.value = Math.min(day.value, daysInMonth.value);
+    const newDay = Math.min(day.value, daysInMonth(year.value, month));
+    update((d) => {
+      d.setDate(newDay);
+      d.setMonth(month);
+    });
   },
 });
 const day = computed({
@@ -91,13 +95,13 @@ const minute = computed({
   },
 });
 
-const daysInMonth = computed((): number => {
+function daysInMonth(year: number, month: number): number {
   return new Date(
-    year.value,
-    month.value + 1, // The next month (wraps).
+    year,
+    month + 1, // The next month (wraps).
     0, // The last day of the previous month, which is the current month.
   ).getDate();
-});
+}
 </script>
 
 <style lang="sass" scoped>

@@ -1,6 +1,6 @@
 <template lang="pug">
-.link_picker
-  input.link_picker__input(type='url' v-model='value')
+.link_picker(:class='{"link_picker--error": error}')
+  input.link_picker__input(type='url' v-model='value' placeholder='Link to shorten...')
   .link_picker__error(v-if='error') {{ error }}
 </template>
 
@@ -44,6 +44,8 @@ watch(value, (newValue) => {
 .link_picker__input
   +input-style
   width: 100%
+
+.link_picker--error > .link_picker__input
   border-bottom: none
 
 .link_picker__error

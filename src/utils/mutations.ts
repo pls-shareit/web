@@ -2,6 +2,9 @@
 
 // --- Mutations
 
+/** Switch to a screen (arg is the name of the screen). */
+export const SWITCH_SCREEN = "switchScreen";
+
 /** Open the password picker (no args). */
 export const OPEN_PASSWORD_PICKER = "openPasswordPicker";
 

@@ -1,6 +1,9 @@
 <template lang="pug">
 .name_picker
-  .autowidth
+  span.name_picker__prefix(@click='focus')
+    span.name_picker__prefix__main(:class='{"name_picker__prefix__main--hidden": props.modelValue}') {{ origin }}
+    span.name_picker__prefix__separator /
+  .autowidth.name_picker__input_wrapper
     input#name_picker_input.name_picker__input.autowidth__input(
       :value='props.modelValue'
       @input='update'
@@ -10,7 +13,6 @@
       pattern='[a-z0-9_.~-]*'
       placeholder='name')
     span.autowidth__dummy#dummy {{ props.modelValue || "name" }}
-  span.name_picker__prefix(@click='focus') {{ origin }}/
 </template>
 
 <script lang="ts" setup>
@@ -36,7 +38,7 @@ watch(customNames, (value) => {
 function update(event: Event) {
   const value = (event.target as HTMLInputElement).value
     .toLowerCase()
-    .replace(/[^a-z0-9_.~-]/g, "_")
+    .replace(/[^a-z0-9_.~-]/g, "-")
     .substring(0, customNames.value.maxLength);
   emit("update:modelValue", value);
 }
@@ -58,17 +60,12 @@ function focus() {
     .name_picker__prefix, .name_picker__input
       background: $item-hover-background
 
-.name_picker__prefix
-  +input-style
-  padding-right: 0
-  border-right: none
-  order: -1
-
 .name_picker__input
   +input-style
   padding: 0.5rem 0
   border-left: none
   text-decoration: underline
+  word-wrap: break-word
   &::placeholder
     text-decoration: underline
 
@@ -89,4 +86,19 @@ function focus() {
   left: 0
   width: 100%
   margin: 0
+
+.name_picker__prefix
+  +input-style
+  padding-right: 0
+  border-right: none
+  overflow: hidden
+
+.name_picker__prefix__main
+  display: inline-block
+  max-width: 50rem
+  transition: all 300ms linear
+
+.name_picker__prefix__main--hidden
+    max-width: 0
+    opacity: 0
 </style>

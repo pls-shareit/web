@@ -45,16 +45,13 @@ function onClick(): void {
 <style lang="sass" scoped>
 @import "../utils/theme.sass"
 
-$setting-icon-margin: 0.5rem
-$setting-icon-size: 2.2rem
-$setting-icon-padding: 0.5rem
-$setting-height: $setting-icon-size + $setting-icon-padding * 2
+$setting-height: $header-icon-size + $header-icon-padding * 2
 $setting-height-half: $setting-height * 0.5
 
 .settings
   position: fixed
-  top: $setting-icon-margin
-  right: $setting-icon-margin
+  top: $header-icon-margin
+  right: $header-icon-margin
 
 .settings--open
   .settings__list
@@ -67,9 +64,9 @@ $setting-height-half: $setting-height * 0.5
 .settings__icon
   position: absolute
   cursor: pointer
-  top: $setting-icon-padding
-  right: $setting-icon-padding
-  width: $setting-icon-size
+  top: $header-icon-padding
+  right: $header-icon-padding
+  width: $header-icon-size
   transition: all 100ms linear
   &:hover
     transform: scale(1.1)
@@ -77,11 +74,11 @@ $setting-height-half: $setting-height * 0.5
 .settings__list
   +item-style
   position: fixed
-  top: $setting-icon-margin
-  right: $setting-icon-margin
+  top: $header-icon-margin
+  right: $header-icon-margin
   min-height: $setting-height
   border-radius: $setting-height-half
-  transform-origin: calc(100% - #{$setting-icon-margin * 2}) $setting-icon-margin * 2
+  transform-origin: calc(100% - #{$header-icon-margin * 2}) $header-icon-margin * 2
   transform: scale(0)
   transition: all 100ms linear
 

@@ -14,6 +14,10 @@ $popup-background: var(--popup-background)
 $popup-border: var(--popup-border)
 $popup-hover-background: var(--popup-hover-background)
 
+$header-icon-margin: 0.5rem
+$header-icon-size: 2.2rem
+$header-icon-padding: 0.5rem
+
 =item-style
   background: $item-background
   border: $item-border
@@ -27,6 +31,9 @@ $popup-hover-background: var(--popup-hover-background)
   font-size: inherit
   padding: 0.5rem
   transition: all 200ms linear
+  cursor: pointer
+  &[type=text], &[type=url], &[type=password]
+    cursor: text
   &::-webkit-input-placeholder
     color: inherit
   &:focus, &:hover:not(:disabled)
@@ -37,3 +44,6 @@ $popup-hover-background: var(--popup-hover-background)
     border: $disabled-item-border
   &:not(:last-of-type)
     margin-right: calc(-1 * #{$item-border-width})
+
+.icon
+  filter: $icon-filter
