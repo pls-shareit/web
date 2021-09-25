@@ -66,6 +66,7 @@ function focus() {
   border-left: none
   text-decoration: underline
   word-wrap: break-word
+  cursor: text
   &::placeholder
     text-decoration: underline
 
@@ -89,6 +90,7 @@ function focus() {
 
 .name_picker__prefix
   +input-style
+  cursor: text
   padding-right: 0
   border-right: none
   overflow: hidden

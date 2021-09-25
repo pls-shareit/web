@@ -55,15 +55,14 @@ $settings-icon-width: $header-icon-size + 2 * ($header-icon-margin + $header-ico
 
 .create__header__icon
   width: $header-icon-size
-  margin: $header-icon-margin
-  padding: $header-icon-padding
+  padding: $header-icon-padding + $header-icon-margin
   cursor: pointer
 
 .create__footer
   display: flex
   flex-wrap: wrap
   justify-content: space-between
-  margin: 1rem
+  margin: 0.5rem 1rem
 
 .create__button
   +input-style

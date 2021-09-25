@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&family=Roboto+Slab&display=swap')
+
 $background: var(--background)
 $item-background: var(--item-background)
 $item-border: var(--item-border)
@@ -8,6 +10,7 @@ $text-colour: var(--text-colour)
 $disabled-colour: var(--disabled-colour)
 $secondary-colour: var(--secondary-colour)
 $icon-filter: var(--icon-filter)
+$secondary-icon-filter: var(--secondary-icon-filter)
 $list-border-width: var(--list-border-width)
 $popup-overlay: var(--popup-overlay)
 $popup-background: var(--popup-background)
@@ -17,6 +20,9 @@ $popup-hover-background: var(--popup-hover-background)
 $header-icon-margin: 0.5rem
 $header-icon-size: 2.2rem
 $header-icon-padding: 0.5rem
+
+$body-font: 'Roboto Slab', sans-serif
+$code-font: 'Fira Code', monospace
 
 =item-style
   background: $item-background
@@ -44,6 +50,13 @@ $header-icon-padding: 0.5rem
     border: $disabled-item-border
   &:not(:last-of-type)
     margin-right: calc(-1 * #{$item-border-width})
+
+body
+  font-family: $body-font
+  color: $text-colour
+  background: $background
+  min-height: 100vh
+  margin: 0
 
 .icon
   filter: $icon-filter

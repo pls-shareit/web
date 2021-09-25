@@ -1,9 +1,10 @@
 <template lang="pug">
 .index
-  TitleScreen(v-if='store.state.screen === "title"')
-  CreateLinkScreen(v-if='store.state.screen === "link"')
-  CreatePasteScreen(v-if='store.state.screen === "paste"')
-  CreateFileScreen(v-if='store.state.screen === "file"')
+  transition(name='screen-')
+    TitleScreen.screen.screen--home(v-if='store.state.screen === "title"')
+    CreateLinkScreen.screen(v-else-if='store.state.screen === "link"')
+    CreatePasteScreen.screen(v-else-if='store.state.screen === "paste"')
+    CreateFileScreen.screen(v-else-if='store.state.screen === "file"')
   Errors
   SettingsMenu
 </template>
@@ -25,19 +26,29 @@ store.dispatch(UPDATE_ABILITIES);
 </script>
 
 <style lang="sass">
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap')
 @import "./utils/theme.sass"
 
-body
-  font-family: 'Roboto Slab', monospace, sans-serif
-  color: $text-colour
-  background: $background
-  min-height: 100vh
-  margin: 0
-
 .index
-  display: flex
-  flex-direction: column
-  justify-content: center
-  min-height: 100vh
+  height: 100vh
+  overflow-y: hidden
+
+.screen
+  position: relative
+  box-sizing: border-box
+  height: 100vh
+
+.screen--enter-active, .screen--leave-active
+  transition: top 200ms ease-in-out
+
+.screen--enter-from, .screen--leave-from
+  top: 0
+
+.screen--home.screen--enter-from
+  top: -200vh
+
+.screen--enter-to, .screen--home.screen--leave-to
+  top: -100vh
+
+.screen--leave-to
+  top: 100vh
 </style>

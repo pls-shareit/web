@@ -34,6 +34,10 @@ const THEME_VARIABLES = {
   // colour.
   icon_filter: "--icon-filter",
 
+  // A CSS filter for less important icons, which may be used to change their
+  // colour.
+  secondary_icon_filter: "--secondary-icon-filter",
+
   // A width for borders between elements of lists.
   list_border_width: "--list-border-width",
 
@@ -101,6 +105,7 @@ class BaseGlassTheme extends Theme {
     this.set(V.text_colour, "#fffc");
     this.set(V.disabled_colour, "#fff4");
     this.set(V.icon_filter, "invert(100%) opacity(80%)");
+    this.set(V.secondary_icon_filter, "invert(100%) opacity(40%)");
     this.set(V.list_border_width, "1px");
     this.set(V.popup_overlay, "#0008");
     this.set(V.popup_hover_background, "#fff2");

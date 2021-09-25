@@ -36,6 +36,11 @@ const actions = computed(() => store.state.actions);
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap')
 @import "../utils/theme.sass"
 
+.title_screen
+  display: flex
+  flex-direction: column
+  justify-content: center
+
 .header
   display: flex
   flex-direction: column

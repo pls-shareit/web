@@ -5,9 +5,6 @@ import {
   RawCustomNameSettings,
   RawAbilities,
   EMPTY_ABILITIES,
-  OkResult,
-  ErrResult,
-  Result,
 } from "@/utils/api";
 import * as names from "@/utils/mutations";
 
@@ -94,7 +91,9 @@ export class ShareRestrictions {
     return this.mimeTypesWhiteList.includes(mimeType);
   }
 
-  linkAllowed(link: string): Result<null, string> {
+  linkAllowed(
+    link: string,
+  ): { allowed: true } | { allowed: false; reason: string } {
     let url;
     try {
       url = new URL(link);
@@ -103,14 +102,17 @@ export class ShareRestrictions {
         error instanceof TypeError &&
         ("" + error).includes("not a valid URL")
       ) {
-        return new ErrResult("URL invalid - maybe start with 'https://'?.");
+        return {
+          allowed: false,
+          reason: "URL invalid - maybe start with 'https://'?.",
+        };
       }
       throw error;
     }
     // Get the protocol of the link and remove the trailing colon.
     const scheme = url.protocol.slice(0, -1);
     if (this.linkSchemes.length === 0 || this.linkSchemes.includes(scheme)) {
-      return new OkResult(null);
+      return { allowed: true };
     }
     const schemes =
       this.linkSchemes.length < 2
@@ -118,7 +120,7 @@ export class ShareRestrictions {
         : this.linkSchemes.slice(0, -1).join(", ") +
           " or " +
           this.linkSchemes.slice(-1);
-    return new ErrResult(`Must start with ${schemes}.`);
+    return { allowed: false, reason: `Must start with ${schemes}.` };
   }
 }
 
@@ -185,22 +187,20 @@ export const store = createStore({
   },
   actions: {
     [names.UPDATE_ABILITIES](context) {
-      getAbilities(context.state.password).then((result) => {
-        result.onOk((abilities) =>
-          context.commit(names.LOAD_ABILITIES, abilities),
-        );
-        result.onError((error) => {
-          context.commit(names.NEW_ERROR, {
-            title: "Error connecting",
-            message: error,
-          });
+      getAbilities(context.state.password)
+        .then((abilities) => context.commit(names.LOAD_ABILITIES, abilities))
+        .catch((error) => {
           context.commit(names.LOAD_ABILITIES, EMPTY_ABILITIES);
           if (context.state.password !== "") {
             context.commit(names.SET_PASSWORD, "");
             context.dispatch(names.UPDATE_ABILITIES);
+            error += " Retrying without password.";
           }
+          context.commit(names.NEW_ERROR, {
+            title: "Error connecting",
+            message: error,
+          });
         });
-      });
     },
   },
 });

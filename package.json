@@ -1,6 +1,6 @@
 {
   "name": "shareit-web",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "description": "A web frontend to ShareIt.",
   "repository": "https://github.com/pls-shareit/web",
   "author": "Artemis <me@arty.li>",

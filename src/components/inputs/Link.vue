@@ -21,16 +21,9 @@ const error: Ref<string | null> = ref(null);
 const value = ref(props.modelValue);
 
 watch(value, (newValue) => {
-  store.state.restrictions
-    .linkAllowed(newValue)
-    .onOk(() => {
-      emit("update:modelValue", newValue);
-      error.value = null;
-    })
-    .onError((message: string) => {
-      emit("update:modelValue", null);
-      error.value = message;
-    });
+  const result = store.state.restrictions.linkAllowed(newValue);
+  emit("update:modelValue", result.allowed ? newValue : null);
+  error.value = result.allowed ? null : result.reason;
 });
 </script>
 
