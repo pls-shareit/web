@@ -2,18 +2,17 @@
 .index
   transition(name='screen-')
     TitleScreen.screen.screen--home(v-if='store.state.screen === "title"')
-    CreateLinkScreen.screen(v-else-if='store.state.screen === "link"')
-    CreatePasteScreen.screen(v-else-if='store.state.screen === "paste"')
-    CreateFileScreen.screen(v-else-if='store.state.screen === "file"')
+    CreateLinkScreen.screen(v-else-if='store.state.screen === "link"' @create='create')
+    CreatePasteScreen.screen(v-else-if='store.state.screen === "paste"' @create='create')
+    CreateFileScreen.screen(v-else-if='store.state.screen === "file"' @create='create')
   Errors
   SettingsMenu
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
 import { useStore } from "vuex";
 
-import { UPDATE_ABILITIES } from "@/utils/mutations";
+import { UPDATE_ABILITIES, NEW_ERROR } from "@/utils/mutations";
 import TitleScreen from "@/components/TitleScreen.vue";
 import CreateLinkScreen from "@/components/CreateLinkScreen.vue";
 import CreatePasteScreen from "@/components/CreatePasteScreen.vue";
@@ -23,6 +22,13 @@ import Errors from "@/components/Errors.vue";
 
 const store = useStore();
 store.dispatch(UPDATE_ABILITIES);
+
+function create(promise: Promise<string>) {
+  promise.then(
+    (link: string) => window.location.href = link,
+    (error: string) => store.commit(NEW_ERROR, { title: "Creation error", message: error }),
+  );
+}
 </script>
 
 <style lang="sass">

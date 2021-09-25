@@ -24,7 +24,7 @@ import NameInput from "@/components/inputs/Name.vue";
 
 const store = useStore();
 const emit = defineEmits<{
-  (event: "create", data: { name: string; expiry: Expiry }): void;
+  (event: "create", data: { name: string; expiry: number | null }): void;
 }>();
 
 const expiry: Ref<Expiry> = ref(new NoExpiry());
@@ -33,7 +33,7 @@ const name = ref("");
 function create() {
   emit("create", {
     name: name.value,
-    expiry: expiry.value,
+    expiry: expiry.value.getSeconds(),
   });
 }
 </script>

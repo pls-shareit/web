@@ -82,3 +82,58 @@ export async function getAbilities(
     }
   });
 }
+
+type BaseShareCreateOptions = {
+  name: string;
+  data: Blob | string;
+  password?: string | null;
+  expiry?: number | null;
+  giveFrontendUrl?: boolean;
+};
+
+export type GenericShareCreateOptions  = BaseShareCreateOptions & {
+  shareType: "file" | "link" | "paste";
+  otherHeaders?: Record<string, string>;
+};
+
+export async function createShare({
+  name,
+  shareType,
+  data,
+  password = null,
+  expiry = null,
+  otherHeaders = {},
+  giveFrontendUrl = false,
+}: GenericShareCreateOptions): Promise<string> {
+  otherHeaders["Share-Type"] = shareType;
+  if (expiry !== null) otherHeaders["Expire-After"] = expiry.toString();
+  const endpoint = name ? `/${name}` : "/";
+  return request("POST", endpoint, { password, body: data, headers: otherHeaders })
+    .then((url) => giveFrontendUrl ? url + "?v" : url);
+}
+
+export type FileCreateOptions = BaseShareCreateOptions & { mimeType?: string | null };
+
+export async function createFileShare(options: FileCreateOptions): Promise<string> {
+  return createShare({
+    ...options,
+    shareType: "file",
+    otherHeaders: options.mimeType ? { "Content-Type": options.mimeType } : {},
+  });
+}
+
+export type LinkCreateOptions = BaseShareCreateOptions;
+
+export async function createLinkShare(options: LinkCreateOptions): Promise<string> {
+  return createShare({ ...options, shareType: "link" });
+}
+
+export type PasteCreateOptions = BaseShareCreateOptions & { language?: string | null };
+
+export async function createPasteShare(options: PasteCreateOptions): Promise<string> {
+  return createShare({
+    ...options,
+    shareType: "paste",
+    otherHeaders: options.language ? { "Share-Highlighting": options.language } : {},
+  });
+}
