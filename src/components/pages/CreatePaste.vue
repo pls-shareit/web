@@ -8,7 +8,8 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 
 import { createPasteShare } from "@/utils/api";
-import CreateScreen from "@/components/CreateScreen.vue";
+import type { NewShare } from "@/utils/api";
+import CreateScreen from "@/components/BaseCreate.vue";
 import Editor from "@/components/inputs/Editor.vue";
 
 const store = useStore();
@@ -16,9 +17,10 @@ const data = ref({
   text: "",
   language: store.state.restrictions.defaultHighlightingLanguage,
 });
-const emit = defineEmits<{(event: "create", promise: Promise<string>): void}>();
+const emit =
+  defineEmits<{ (event: "create", promise: Promise<NewShare>): void }>();
 
-function create({ name, expiry }: { name: string, expiry: number | null}) {
+function create({ name, expiry }: { name: string; expiry: number | null }) {
   if (!data.value.text) return;
   emit(
     "create",
@@ -28,7 +30,6 @@ function create({ name, expiry }: { name: string, expiry: number | null}) {
       password: store.state.password,
       data: data.value.text,
       language: data.value.language,
-      giveFrontendUrl: true,
     }),
   );
 }

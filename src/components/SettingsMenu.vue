@@ -1,20 +1,20 @@
 <template lang="pug">
-.component_root
-  .settings(
-    :class='{ "settings--open": openFromClick || openFromHover }'
-    @mouseover='openFromHover = true'
-    @mouseleave='openFromHover = false'
-  )
-    .settings__list
-      .settings__setting(@click='store.commit(OPEN_PASSWORD_PICKER)' v-if='store.state.actions.login')
-        img(src='../assets/icons/key.svg').settings__setting__icon.icon
-        span.settings__setting__name Set Password
-      ThemeInput.settings__setting
-      a(href='https://arty.li' target='_blank').settings__setting
-        .settings__setting__icon &copy;
-        .settings__setting__name Artemis 2021
-    img(src='../assets/icons/gear.svg' @click='onClick').settings__icon.icon
-  PasswordInput
+.settings(
+  :class='{ "settings--open": openFromClick || openFromHover }'
+  @mouseover='openFromHover = true'
+  @mouseleave='openFromHover = false'
+  v-bind='$attrs'
+)
+  .settings__list
+    .settings__setting(@click='store.commit(OPEN_PASSWORD_PICKER)' v-if='store.state.actions.login')
+      img(src='../assets/icons/key.svg').settings__setting__icon.icon
+      span.settings__setting__name Set Password
+    ThemeInput.settings__setting
+    a(href='https://arty.li' target='_blank').settings__setting
+      .settings__setting__icon &copy;
+      .settings__setting__name Artemis 2021
+  img(src='../assets/icons/gear.svg' @click='onClick').settings__icon.icon
+PasswordInput
 </template>
 
 <script lang="ts" setup>

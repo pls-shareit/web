@@ -10,14 +10,16 @@ import type { Ref } from "vue";
 import { useStore } from "vuex";
 
 import { createFileShare } from "@/utils/api";
-import CreateScreen from "@/components/CreateScreen.vue";
+import type { NewShare } from "@/utils/api";
+import CreateScreen from "@/components/BaseCreate.vue";
 import FileInput from "@/components/inputs/File.vue";
 
 const store = useStore();
 const file: Ref<File | null> = ref(null);
-const emit = defineEmits<{(event: "create", promise: Promise<string>): void}>();
+const emit =
+  defineEmits<{ (event: "create", promise: Promise<NewShare>): void }>();
 
-function create({ name, expiry }: { name: string, expiry: number | null}) {
+function create({ name, expiry }: { name: string; expiry: number | null }) {
   if (!file.value) return;
   emit(
     "create",
@@ -27,7 +29,6 @@ function create({ name, expiry }: { name: string, expiry: number | null}) {
       password: store.state.password,
       mimeType: file.value.type,
       data: file.value,
-      giveFrontendUrl: true,
     }),
   );
 }

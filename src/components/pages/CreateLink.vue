@@ -9,14 +9,16 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 
 import { createLinkShare } from "@/utils/api";
-import CreateScreen from "@/components/CreateScreen.vue";
+import type { NewShare } from "@/utils/api";
+import CreateScreen from "@/components/BaseCreate.vue";
 import LinkInput from "@/components/inputs/Link.vue";
 
 const store = useStore();
 const link = ref("");
-const emit = defineEmits<{(event: "create", promise: Promise<string>): void}>();
+const emit =
+  defineEmits<{ (event: "create", promise: Promise<NewShare>): void }>();
 
-function create({ name, expiry }: { name: string, expiry: number | null}) {
+function create({ name, expiry }: { name: string; expiry: number | null }) {
   if (!link.value) return;
   emit(
     "create",
@@ -25,7 +27,6 @@ function create({ name, expiry }: { name: string, expiry: number | null}) {
       expiry,
       password: store.state.password,
       data: link.value,
-      giveFrontendUrl: false,
     }),
   );
 }

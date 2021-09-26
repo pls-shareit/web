@@ -1,6 +1,6 @@
 {
   "name": "shareit-web",
-  "version": "0.1.0-beta.0",
+  "version": "0.1.0-beta.1",
   "description": "A web frontend to ShareIt.",
   "repository": "https://github.com/pls-shareit/web",
   "author": "Artemis <me@arty.li>",
@@ -13,6 +13,7 @@
   "dependencies": {
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
+    "vue-router": "4",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

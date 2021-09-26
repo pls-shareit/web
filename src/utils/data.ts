@@ -130,10 +130,7 @@ export type ErrorMessage = {
   timestamp: Date;
 };
 
-type ScreenName = "title" | "link" | "paste" | "file";
-
 export type State = {
-  screen: ScreenName;
   passwordPickerOpen: boolean;
   password: string | null;
   actions: Actions;
@@ -144,7 +141,6 @@ export type State = {
 export const store = createStore({
   state(): State {
     return {
-      screen: "title",
       passwordPickerOpen: false,
       password: localStorage.getItem("shareit-password") || null,
       actions: new Actions(EMPTY_ABILITIES),
@@ -153,9 +149,6 @@ export const store = createStore({
     };
   },
   mutations: {
-    [names.SWITCH_SCREEN](state: State, screen: ScreenName) {
-      state.screen = screen;
-    },
     [names.OPEN_PASSWORD_PICKER](state: State) {
       state.passwordPickerOpen = true;
     },
@@ -194,11 +187,11 @@ export const store = createStore({
           if (context.state.password !== "") {
             context.commit(names.SET_PASSWORD, "");
             context.dispatch(names.UPDATE_ABILITIES);
-            error += " Retrying without password.";
+            error.message += " Retrying without password.";
           }
           context.commit(names.NEW_ERROR, {
             title: "Error connecting",
-            message: error,
+            message: error.message,
           });
         });
     },

@@ -1,9 +1,8 @@
 <template lang="pug">
 .create
   .create__header
-    img.icon.create__header__icon(
-      src='../assets/icons/home.svg'
-      @click='store.commit(SWITCH_SCREEN, "title")')
+    router-link(to='/')
+      img.icon.create__header__icon(src='../assets/icons/home.svg')
     NameInput(v-model='name')
   slot
   .create__footer
@@ -14,15 +13,12 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import type { Ref } from "vue";
-import { useStore } from "vuex";
 
-import { SWITCH_SCREEN } from "@/utils/mutations";
 import { NoExpiry } from "@/utils/expiry";
 import type { Expiry } from "@/utils/expiry";
 import ExpiryInput from "@/components/inputs/Expiry.vue";
 import NameInput from "@/components/inputs/Name.vue";
 
-const store = useStore();
 const emit = defineEmits<{
   (event: "create", data: { name: string; expiry: number | null }): void;
 }>();

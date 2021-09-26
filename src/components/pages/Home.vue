@@ -1,24 +1,24 @@
 <template lang="pug">
-.title_screen
+.title_screen.screen--home
   .header
-    img.header__logo(src='../assets/logo.png')
+    img.header__logo(src='../../assets/logo.png')
     h1.header__title ShareIt
     p.header__description ShareIt is a pastebin, link shortener and file uploader.
   hr.page_break(v-if='actions.createPaste || actions.createLink || actions.createFile || actions.login')
   .actions
-    .action(v-if='actions.createPaste' @click='store.commit(SWITCH_SCREEN, "paste")')
-      img(src='../assets/icons/clipboard.svg').action__icon.icon
+    router-link.action(v-if='actions.createPaste' to='/!paste')
+      img(src='../../assets/icons/clipboard.svg').action__icon.icon
       h2.action__title Paste
-    .action(v-if='actions.createLink' @click='store.commit(SWITCH_SCREEN, "link")')
-      img(src='../assets/icons/link.svg').action__icon.icon
+    router-link.action(v-if='actions.createLink' to='/!link')
+      img(src='../../assets/icons/link.svg').action__icon.icon
       h2.action__title Link
-    .action(v-if='actions.createFile' @click='store.commit(SWITCH_SCREEN, "file")')
-      img(src='../assets/icons/upload.svg').action__icon.icon
+    router-link.action(v-if='actions.createFile' to='/!file')
+      img(src='../../assets/icons/upload.svg').action__icon.icon
       h2.action__title File
     .action(
         v-if='actions.login && !(actions.createPaste || actions.createLink || actions.createFile)'
         @click='store.commit(OPEN_PASSWORD_PICKER)')
-      img(src='../assets/icons/key.svg').action__icon.icon
+      img(src='../../assets/icons/key.svg').action__icon.icon
       h2.action__title Login
 </template>
 
@@ -26,7 +26,7 @@
 import { computed } from "vue";
 import { useStore } from "vuex";
 
-import { SWITCH_SCREEN, OPEN_PASSWORD_PICKER } from "@/utils/mutations";
+import { OPEN_PASSWORD_PICKER } from "@/utils/mutations";
 
 const store = useStore();
 const actions = computed(() => store.state.actions);
@@ -34,7 +34,7 @@ const actions = computed(() => store.state.actions);
 
 <style lang="sass">
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap')
-@import "../utils/theme.sass"
+@import "../../utils/theme.sass"
 
 .title_screen
   display: flex
@@ -84,6 +84,8 @@ const actions = computed(() => store.state.actions);
   padding: 1rem
   transform: scale(1)
   transition: all 100ms linear
+  color: inherit
+  text-decoration: none
   &:hover
     transform: scale(1.1)
     background: $item-hover-background

@@ -14,11 +14,5 @@ export default defineConfig({
   build: {
     outDir: "../frontend",
     assetsDir: "static",
-    rollupOptions: {
-      input: [
-        "src/index.html",
-        "src/share.html",
-      ],
-    },
   },
 });

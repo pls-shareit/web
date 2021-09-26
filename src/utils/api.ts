@@ -52,35 +52,41 @@ async function request(
     token = null,
     headers = {},
   }: RequestOptions = {},
-): Promise<string> {
+): Promise<Response> {
   headers = headers || {};
   if (password) {
     headers["Authorization"] = `Password ${password}`;
   } else if (token) {
     headers["Authorization"] = `Token ${token}`;
   }
-  return new Promise((resolve, reject) => {
-    fetch(endpoint, { method, headers, body }).then(
-      (res) =>
-        res.text().then(
-          (content) => (res.ok ? resolve(content) : reject(content)),
-          () => reject("Could not decode server response."),
-        ),
-      () => reject("HTTP connection to server failed."),
+  const res = await fetch(endpoint, { method, headers, body }).catch(() => {
+    throw new Error("Could not connect to server.");
+  });
+  if (res.ok) return res;
+  const text = await decodeResponse(res).catch(() => {
+    throw new Error(
+      `Server gave ${res.status} error with undecodable message.`,
     );
+  });
+  throw new Error(text);
+}
+
+async function decodeResponse(response: Response): Promise<string> {
+  return await response.text().catch(() => {
+    throw new Error("Could not decode server response.");
   });
 }
 
 export async function getAbilities(
   password: string | null = "",
 ): Promise<RawAbilities> {
-  return request("GET", "/meta/abilities", { password }).then((content) => {
-    try {
-      return JSON.parse(content);
-    } catch (e) {
-      throw "Could not parse server response.";
-    }
-  });
+  const res = await request("GET", "/meta/abilities", { password });
+  const raw = await decodeResponse(res);
+  try {
+    return JSON.parse(raw);
+  } catch {
+    throw new Error("Could not parse server response as JSON.");
+  }
 }
 
 type BaseShareCreateOptions = {
@@ -88,12 +94,17 @@ type BaseShareCreateOptions = {
   data: Blob | string;
   password?: string | null;
   expiry?: number | null;
-  giveFrontendUrl?: boolean;
 };
 
-export type GenericShareCreateOptions  = BaseShareCreateOptions & {
+export type GenericShareCreateOptions = BaseShareCreateOptions & {
   shareType: "file" | "link" | "paste";
   otherHeaders?: Record<string, string>;
+};
+
+export type NewShare = {
+  url: string;
+  name: string;
+  token: string | null;
 };
 
 export async function createShare({
@@ -103,18 +114,34 @@ export async function createShare({
   password = null,
   expiry = null,
   otherHeaders = {},
-  giveFrontendUrl = false,
-}: GenericShareCreateOptions): Promise<string> {
+}: GenericShareCreateOptions): Promise<NewShare> {
   otherHeaders["Share-Type"] = shareType;
   if (expiry !== null) otherHeaders["Expire-After"] = expiry.toString();
   const endpoint = name ? `/${name}` : "/";
-  return request("POST", endpoint, { password, body: data, headers: otherHeaders })
-    .then((url) => giveFrontendUrl ? url + "?v" : url);
+  const res = await request("POST", endpoint, {
+    password,
+    body: data,
+    headers: otherHeaders,
+  });
+  const raw = await decodeResponse(res);
+  let url;
+  try {
+    url = new URL(raw);
+  } catch {
+    throw new Error("Could not parse server response as a URL.");
+  }
+  const createdName = url.pathname.slice(1);
+  const token = res.headers.get("Share-Token");
+  return { url: raw, name: createdName, token: token };
 }
 
-export type FileCreateOptions = BaseShareCreateOptions & { mimeType?: string | null };
+export type FileCreateOptions = BaseShareCreateOptions & {
+  mimeType?: string | null;
+};
 
-export async function createFileShare(options: FileCreateOptions): Promise<string> {
+export async function createFileShare(
+  options: FileCreateOptions,
+): Promise<NewShare> {
   return createShare({
     ...options,
     shareType: "file",
@@ -124,16 +151,24 @@ export async function createFileShare(options: FileCreateOptions): Promise<strin
 
 export type LinkCreateOptions = BaseShareCreateOptions;
 
-export async function createLinkShare(options: LinkCreateOptions): Promise<string> {
+export async function createLinkShare(
+  options: LinkCreateOptions,
+): Promise<NewShare> {
   return createShare({ ...options, shareType: "link" });
 }
 
-export type PasteCreateOptions = BaseShareCreateOptions & { language?: string | null };
+export type PasteCreateOptions = BaseShareCreateOptions & {
+  language?: string | null;
+};
 
-export async function createPasteShare(options: PasteCreateOptions): Promise<string> {
+export async function createPasteShare(
+  options: PasteCreateOptions,
+): Promise<NewShare> {
   return createShare({
     ...options,
     shareType: "paste",
-    otherHeaders: options.language ? { "Share-Highlighting": options.language } : {},
+    otherHeaders: options.language
+      ? { "Share-Highlighting": options.language }
+      : {},
   });
 }
