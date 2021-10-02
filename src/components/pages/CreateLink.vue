@@ -38,6 +38,7 @@ function create({ name, expiry }: { name: string; expiry: number | null }) {
   flex-direction: column
   align-items: center
   justify-content: center
+  height: 100%
 
 .link__input
   margin: 0.5rem

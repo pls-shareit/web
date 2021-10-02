@@ -2,9 +2,6 @@
 
 A modern-looking web frontend for [ShareIt](https://github.com/pls-shareit/api).
 
-**Warning:** This is a pre-release. The frontend does not fully implement the
-API and probably contains many bugs.
-
 ## Setup
 
 The files that make up the frontend are built using [Vue](https://vuejs.org).

@@ -5,8 +5,8 @@ label.file(
     @dragleave='dragRefCount -= 1'
     @drop='onDrop'
     :class='{ "file--empty": props.modelValue === null, "file--drag-over": dragRefCount }')
-  img.icon.file__icon(src='../../assets/icons/upload.svg' v-if='props.modelValue === null')
-  img.icon.file__icon(src='../../assets/icons/file.svg' v-else)
+  img.file__icon(src='../../assets/icons/upload.svg' v-if='props.modelValue === null')
+  img.file__icon(src='../../assets/icons/file.svg' v-else)
   .file__main_text(v-if='props.modelValue === null') Drag and drop a file to upload!
   .file__main_text(v-else) {{ props.modelValue.name }}
   .file__small_text(v-if='props.modelValue === null') ...or click to open a file picker
@@ -77,6 +77,7 @@ function onInput() {
   visibility: hidden
 
 .file__icon
+  +icon-style
   width: 10rem
 
 .file__small_text

@@ -7,13 +7,13 @@
 )
   .settings__list
     .settings__setting(@click='store.commit(OPEN_PASSWORD_PICKER)' v-if='store.state.actions.login')
-      img(src='../assets/icons/key.svg').settings__setting__icon.icon
+      img(src='../assets/icons/key.svg').settings__setting__icon.settings__setting__icon--svg
       span.settings__setting__name Set Password
     ThemeInput.settings__setting
     a(href='https://arty.li' target='_blank').settings__setting
       .settings__setting__icon &copy;
       .settings__setting__name Artemis 2021
-  img(src='../assets/icons/gear.svg' @click='onClick').settings__icon.icon
+  img(src='../assets/icons/gear.svg' @click='onClick').settings__icon
 PasswordInput
 </template>
 
@@ -49,9 +49,10 @@ $setting-height: $header-icon-size + $header-icon-padding * 2
 $setting-height-half: $setting-height * 0.5
 
 .settings
-  position: fixed
-  top: $header-icon-margin
-  right: $header-icon-margin
+  position: relative
+  margin-top: $header-icon-margin
+  margin-right: $header-icon-margin
+  z-index: 10
 
 .settings--open
   .settings__list
@@ -62,6 +63,7 @@ $setting-height-half: $setting-height * 0.5
       transform: scale(1.1) rotate(90deg)
 
 .settings__icon
+  +icon-style
   position: absolute
   cursor: pointer
   top: $header-icon-padding
@@ -73,9 +75,9 @@ $setting-height-half: $setting-height * 0.5
 
 .settings__list
   +item-style
-  position: fixed
-  top: $header-icon-margin
-  right: $header-icon-margin
+  position: absolute
+  width: max-content
+  right: 0
   min-height: $setting-height
   border-radius: $setting-height-half
   transform-origin: calc(100% - #{$header-icon-margin * 2}) $header-icon-margin * 2
@@ -102,6 +104,9 @@ $setting-height-half: $setting-height * 0.5
     border-bottom-right-radius: $setting-height-half
   &:not(:last-child)
     border-bottom: $list-border-width solid $secondary-colour
+
+.settings__setting__icon--svg
+  +icon-style
 
 .settings__setting__icon
   width: 1.5rem

@@ -51,12 +51,13 @@ $code-font: 'Fira Code', monospace
   &:not(:last-of-type)
     margin-right: calc(-1 * #{$item-border-width})
 
+=icon-style
+  filter: $icon-filter
+  display: block
+
 body
   font-family: $body-font
   color: $text-colour
   background: $background
   min-height: 100vh
   margin: 0
-
-.icon
-  filter: $icon-filter

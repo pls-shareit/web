@@ -37,13 +37,16 @@ const errors = computed((): ErrorMessage[] => store.state.errors);
   padding: 1rem
   margin: 0.5rem
 
+.error__title, .error__message
+  margin-right: 2rem
+
 .error__message
   margin-top: 1rem
   font-size: 0.8rem
 
 .error__dismiss
   position: absolute
-  top: calc(0.8rem - (1em - 1ex))
-  right: 0.8rem
+  top: calc(1rem - 0.5ex)
+  right: 1rem
   cursor: pointer
 </style>

@@ -40,4 +40,5 @@ function create({ name, expiry }: { name: string; expiry: number | null }) {
   flex-direction: column
   align-items: center
   justify-content: center
+  margin: auto
 </style>

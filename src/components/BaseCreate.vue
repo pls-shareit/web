@@ -1,9 +1,5 @@
 <template lang="pug">
 .create
-  .create__header
-    router-link(to='/')
-      img.icon.create__header__icon(src='../assets/icons/home.svg')
-    NameInput(v-model='name')
   slot
   .create__footer
     ExpiryInput(v-model='expiry')
@@ -12,7 +8,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import type { Ref } from "vue";
+import type { Component, Ref } from "vue";
 
 import { NoExpiry } from "@/utils/expiry";
 import type { Expiry } from "@/utils/expiry";
@@ -21,10 +17,12 @@ import NameInput from "@/components/inputs/Name.vue";
 
 const emit = defineEmits<{
   (event: "create", data: { name: string; expiry: number | null }): void;
+  (event: "headerContent", data: { view: Component; model: Ref }): void;
 }>();
 
 const expiry: Ref<Expiry> = ref(new NoExpiry());
 const name = ref("");
+emit("headerContent", { view: NameInput, model: name });
 
 function create() {
   emit("create", {
@@ -43,16 +41,6 @@ $settings-icon-width: $header-icon-size + 2 * ($header-icon-margin + $header-ico
   display: flex
   flex-direction: column
   justify-content: space-between
-  min-height: 100vh
-
-.create__header
-  display: flex
-  width: calc(100vw - $settings-icon-width)
-
-.create__header__icon
-  width: $header-icon-size
-  padding: $header-icon-padding + $header-icon-margin
-  cursor: pointer
 
 .create__footer
   display: flex

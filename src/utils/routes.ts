@@ -16,27 +16,13 @@ const routes = [
   { path: "/:any(.*)", redirect: "" },
 ];
 
-export const router = createRouter({
-  history: createMemoryHistory(),
-  routes,
-});
+const history = createMemoryHistory();
+history.replace(`/${window.location.hash.slice(1)}`);
 
-let routerOnReadyHasBeenCalled = false;
-
-window.addEventListener(
-  "load",
-  () => {
-    router.push(`/${window.location.hash.slice(1)}`);
-    routerOnReadyHasBeenCalled = true;
-  },
-  true,
-);
+export const router = createRouter({ history, routes });
 
 window.addEventListener("hashchange", () => {
   router.push(`/${window.location.hash.slice(1)}`);
 });
 
-router.afterEach((to, from) => {
-  if (!routerOnReadyHasBeenCalled) return;
-  window.location.hash = to.fullPath.slice(1);
-});
+router.afterEach((to) => (window.location.hash = to.fullPath.slice(1)));

@@ -7,18 +7,18 @@
   hr.page_break(v-if='actions.createPaste || actions.createLink || actions.createFile || actions.login')
   .actions
     router-link.action(v-if='actions.createPaste' to='/!paste')
-      img(src='../../assets/icons/clipboard.svg').action__icon.icon
+      img(src='../../assets/icons/clipboard.svg').action__icon
       h2.action__title Paste
     router-link.action(v-if='actions.createLink' to='/!link')
-      img(src='../../assets/icons/link.svg').action__icon.icon
+      img(src='../../assets/icons/link.svg').action__icon
       h2.action__title Link
     router-link.action(v-if='actions.createFile' to='/!file')
-      img(src='../../assets/icons/upload.svg').action__icon.icon
+      img(src='../../assets/icons/upload.svg').action__icon
       h2.action__title File
     .action(
         v-if='actions.login && !(actions.createPaste || actions.createLink || actions.createFile)'
         @click='store.commit(OPEN_PASSWORD_PICKER)')
-      img(src='../../assets/icons/key.svg').action__icon.icon
+      img(src='../../assets/icons/key.svg').action__icon
       h2.action__title Login
 </template>
 
@@ -45,7 +45,7 @@ const actions = computed(() => store.state.actions);
   display: flex
   flex-direction: column
   align-items: center
-  margin: 1rem
+  margin: 0 1rem 1rem 1rem
   text-align: center
 
 .header__title
@@ -91,6 +91,7 @@ const actions = computed(() => store.state.actions);
     background: $item-hover-background
 
 .action__icon
+  +icon-style
   width: 4rem
 
 .action__title
