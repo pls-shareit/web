@@ -14,5 +14,12 @@ export default defineConfig({
   build: {
     outDir: "../frontend",
     assetsDir: "static",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "hljs": ["highlight.js"],
+        },
+      },
+    },
   },
 });

@@ -36,7 +36,11 @@ async function request(
     headers["Authorization"] = `Token ${token}`;
   }
   headers["Accept-Redirect"] = "no"; // We never want real redirects.
-  const res = await fetch(endpoint, { method, headers, body }).catch(() => {
+  const res = await fetch(endpoint, {
+    method,
+    headers,
+    body,
+  }).catch(() => {
     throw new Error("Could not connect to server.");
   });
   if (res.ok) return res;
@@ -230,13 +234,17 @@ export async function createPasteShare(
 type BaseShare = { url: string; name: string };
 
 /** Metadata and file content for a file share. */
-type FileShare = BaseShare & { type: "file"; file: Blob; contentType: string };
+export type FileShare = BaseShare & {
+  type: "file";
+  file: Blob;
+  contentType: string;
+};
 
 /** Metadata and full link for a link share. */
-type LinkShare = BaseShare & { type: "link"; link: string };
+export type LinkShare = BaseShare & { type: "link"; link: string };
 
 /** Metadata and paste content for a paste share. */
-type PasteShare = BaseShare & {
+export type PasteShare = BaseShare & {
   type: "paste";
   paste: string;
   language: string;

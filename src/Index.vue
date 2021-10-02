@@ -26,7 +26,7 @@ import { useRouter } from "vue-router";
 import { UPDATE_ABILITIES, NEW_ERROR } from "@/utils/mutations";
 import type { NewShare } from "@/utils/api";
 import SettingsMenu from "@/components/SettingsMenu.vue";
-import Errors from "@/components/Errors.vue";
+import Errors from "@/components/views/Errors.vue";
 
 const store = useStore();
 const router = useRouter();

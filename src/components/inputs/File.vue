@@ -17,6 +17,8 @@ label.file(
 <script lang="ts" setup>
 import { ref } from "vue";
 
+import { prettyFileSize } from "@/utils/prettifiers";
+
 const id = "autoid-file-input-" + Math.random();
 
 const props = defineProps<{ modelValue: File | null }>();
@@ -25,17 +27,6 @@ const emit = defineEmits<{
 }>();
 
 const dragRefCount = ref(0);
-
-function prettyFileSize(bytes: number): string {
-  if (bytes < 1000) return `${bytes} bytes`;
-  const units = "kMGTPEZY";
-  let power = -1;
-  do {
-    bytes /= 1000;
-    power++;
-  } while (bytes >= 1000 && power < units.length - 1);
-  return `${bytes.toFixed(2)} ${units[power]}B`;
-}
 
 function onDrop(event: DragEvent) {
   event.preventDefault();

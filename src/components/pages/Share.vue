@@ -1,7 +1,6 @@
 <template lang="pug">
 .share(v-if='share !== null')
-  span Link to the {{ share.type }}: !{''}
-  a(:href='share.url') {{ share.url }}
+  component(:is='shareView', :share='share')
 .share.share--not-found(v-else)
   h1.share__title 404
   h2.share__subtitle Share not found
@@ -11,23 +10,48 @@
 
 <script lang="ts" setup>
 import { ref, watch, computed } from "vue";
-import type { Ref } from "vue";
+import type { Component, Ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
 import { getShare } from "@/utils/api";
 import type { Share } from "@/utils/api";
 import { NEW_ERROR } from "@/utils/mutations";
+import ShareMetaView from "@/components/views/ShareMeta.vue";
+import LinkShareView from "@/components/views/LinkShare.vue";
+import PasteShareView from "@/components/views/PasteShare.vue";
+import FileShareView from "@/components/views/FileShare.vue";
 
 const router = useRouter();
 const store = useStore();
 
+const emit = defineEmits<{
+  (event: "headerContent", data: { view: Component; model: Ref }): void;
+}>();
+
 const name = computed(() => router.currentRoute.value.params.share as string);
 const share: Ref<Share | null> = ref(null);
 
+const shareView = computed(() => {
+  if (share.value === null) return null;
+  switch (share.value.type) {
+    case "link":
+      return LinkShareView;
+    case "paste":
+      return PasteShareView;
+    case "file":
+      return FileShareView;
+  }
+  return null;
+});
+
 function update(name: string) {
+  if (!name) return;
   getShare(name).then(
-    (data) => (share.value = data),
+    (data) => {
+      share.value = data;
+      emit("headerContent", { view: ShareMetaView, model: share });
+    },
     (error) => {
       store.commit(NEW_ERROR, {
         title: "Error fetching share",
@@ -39,7 +63,6 @@ function update(name: string) {
 }
 
 update(name.value);
-
 watch(name, update);
 </script>
 

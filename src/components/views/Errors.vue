@@ -23,7 +23,7 @@ const errors = computed((): ErrorMessage[] => store.state.errors);
 </script>
 
 <style lang="sass" scoped>
-@import "../utils/theme.sass"
+@import "../../utils/theme.sass"
 
 .errors
   position: fixed

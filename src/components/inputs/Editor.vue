@@ -20,7 +20,7 @@ const emit = defineEmits<{
 }>();
 
 const language = ref(props.modelValue.language);
-const lines = computed(() => props.modelValue.text.split("\n").length);
+const lines = computed(() => props.modelValue.text.split("\n").length + 1);
 
 function update(event: Event) {
   const input = event.target as HTMLTextAreaElement;
