@@ -1,5 +1,5 @@
 <template lang="pug">
-.name_picker
+.name_picker(v-if='customNames')
   span.name_picker__prefix(@click='focus')
     span.name_picker__prefix__main(:class='{"name_picker__prefix__main--hidden": props.modelValue}') {{ origin }}
     span.name_picker__prefix__separator /
@@ -7,7 +7,6 @@
     input#name_picker_input.name_picker__input.autowidth__input(
       :value='props.modelValue'
       @input='update'
-      v-if='customNames'
       :minlength='customNames.minLength'
       :maxlength='customNames.maxLength'
       pattern='[a-z0-9_.~-]*'
